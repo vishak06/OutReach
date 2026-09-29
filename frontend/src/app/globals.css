@@ -1,0 +1,114 @@
+@import "tailwindcss";
+
+:root {
+  --background: #07111f;
+  --foreground: #ecf4ff;
+  --muted: #8ea0b8;
+  --panel: rgba(10, 18, 32, 0.82);
+  --panel-strong: rgba(13, 25, 45, 0.96);
+  --panel-soft: rgba(255, 255, 255, 0.05);
+  --border: rgba(255, 255, 255, 0.1);
+  --accent: #b8ff6a;
+  --accent-strong: #9ef04d;
+  --danger: #ff7b7b;
+  --success: #5ce0a4;
+  --warning: #ffc95d;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-sans);
+  --font-display: var(--font-display);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+  background:
+    radial-gradient(circle at top left, rgba(184, 255, 106, 0.12), transparent 28%),
+    radial-gradient(circle at top right, rgba(92, 224, 164, 0.08), transparent 26%),
+    linear-gradient(180deg, #09111e 0%, #060b14 100%);
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  color: var(--foreground);
+  font-family: var(--font-sans), sans-serif;
+  background: transparent;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+::selection {
+  background: rgba(184, 255, 106, 0.3);
+  color: var(--foreground);
+}
+
+.panel {
+  border: 1px solid var(--border);
+  background: var(--panel);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.32);
+}
+
+.panel-strong {
+  border: 1px solid var(--border);
+  background: var(--panel-strong);
+  backdrop-filter: blur(24px);
+  box-shadow: 0 28px 88px rgba(0, 0, 0, 0.4);
+}
+
+.soft-border {
+  border-color: var(--border);
+}
+
+.text-muted {
+  color: var(--muted);
+}
+
+.hero-grid {
+  background-image: linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 42px 42px;
+}
+
+.glass-card {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.03));
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(24px);
+}
+
+.table-row {
+  transition: background-color 180ms ease, transform 180ms ease;
+}
+
+.table-row:hover {
+  background: rgba(255, 255, 255, 0.04);
+  transform: translateY(-1px);
+}
+
+.scrollbar::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+}
+
+.scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.display-font {
+  font-family: var(--font-display), sans-serif;
+}
