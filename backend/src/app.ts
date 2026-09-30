@@ -68,7 +68,7 @@ export function createApp(): express.Express {
   app.get('/api/auth/google', passportInstance.authenticate('google', { scope: ['profile', 'email'] }));
 
   app.get('/api/auth/google/callback', passportInstance.authenticate('google', { failureRedirect: '/' }), (_req, res) => {
-    res.redirect('/dashboard');
+    res.redirect(`${config.frontendUrl}/dashboard`);
   });
 
   app.post('/api/auth/logout', (req, res, next) => {
