@@ -147,13 +147,21 @@ export default function DashboardPage() {
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
+
+    const recipients = [...parseRecipients(form.recipients), recipientDraft.trim()].filter(Boolean);
+
+    if (!form.from.trim() || recipients.length === 0 || !form.subject.trim() || !form.body.trim()) {
+      setMessage('Add a recipient, subject, and message before sending.');
+      return;
+    }
+
     setSubmitting(true);
     setMessage(null);
 
     try {
       await api.scheduleEmails({
         from: form.from,
-        recipients: parseRecipients(form.recipients),
+        recipients,
         subject: form.subject,
         body: form.body,
         scheduledAt: form.scheduledAt ? new Date(form.scheduledAt).toISOString() : undefined,
@@ -162,6 +170,7 @@ export default function DashboardPage() {
       });
 
       setComposeOpen(false);
+      setRecipientDraft('');
       await refreshDashboard();
       setMessage('Email batch scheduled successfully.');
     } catch (error) {
