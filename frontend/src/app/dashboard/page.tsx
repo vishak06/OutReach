@@ -51,6 +51,9 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [loadingDashboard, setLoadingDashboard] = useState(true);
   const [composeOpen, setComposeOpen] = useState(false);
+  const [sendLaterOpen, setSendLaterOpen] = useState(false);
+  const [attachments, setAttachments] = useState<string[]>([]);
+  const [recipientDraft, setRecipientDraft] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [detailId, setDetailId] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
@@ -176,6 +179,44 @@ export default function DashboardPage() {
     await api.sendNow(emailId);
     await refreshDashboard();
     setMessage('Email sent immediately via Ethereal.');
+  }
+
+  function setSchedule(daysFromNow: number, hour?: number): void {
+    const scheduled = new Date();
+    scheduled.setDate(scheduled.getDate() + daysFromNow);
+    if (hour !== undefined) {
+      scheduled.setHours(hour, 0, 0, 0);
+    } else {
+      scheduled.setMinutes(scheduled.getMinutes() + 30, 0, 0);
+    }
+
+    const localValue = new Date(scheduled.getTime() - scheduled.getTimezoneOffset() * 60000)
+      .toISOString()
+      .slice(0, 16);
+    setForm((current) => ({ ...current, scheduledAt: localValue }));
+    setSendLaterOpen(false);
+  }
+
+  function applyEditorCommand(command: string, value?: string): void {
+    document.execCommand(command, false, value);
+    document.getElementById('email-editor')?.focus();
+  }
+
+  function handleRecipientFile(event: React.ChangeEvent<HTMLInputElement>): void {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const contents = typeof reader.result === 'string' ? reader.result : '';
+      setForm((current) => ({ ...current, recipients: parseRecipients(contents).join(', ') }));
+    };
+    reader.readAsText(file);
+  }
+
+  function handleAttachment(event: React.ChangeEvent<HTMLInputElement>): void {
+    const files = Array.from(event.target.files ?? []).map((file) => file.name);
+    setAttachments((current) => [...current, ...files]);
   }
 
   if (loading) {
@@ -377,54 +418,86 @@ export default function DashboardPage() {
       {composeOpen ? (
         <div className="fixed inset-0 z-50 overflow-auto bg-white p-4 sm:p-8">
           <div className="panel mx-auto w-full max-w-[1000px] p-2 lg:p-6">
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <p className="text-[10px] text-[#a0a8a3]">Compose</p>
-                <h2 className="mt-2 text-[17px] font-medium text-[#25312a]">Compose New Email</h2>
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex items-center gap-2">
+                <button type="button" onClick={() => setComposeOpen(false)} className="text-[22px] leading-none text-[#27302b]">←</button>
+                <h2 className="text-[17px] font-medium text-[#25312a]">Compose New Email</h2>
               </div>
-              <button type="button" onClick={() => setComposeOpen(false)} className="px-4 py-2 text-[11px] text-[#78817b]">
-                Close
-              </button>
+              <div className="flex items-center gap-4">
+                <label className="cursor-pointer text-[17px] text-[#8f9992]" title="Attach files">
+                  ♧
+                  <input type="file" multiple className="hidden" onChange={handleAttachment} />
+                </label>
+                <button type="button" onClick={() => setSendLaterOpen((current) => !current)} className="text-[17px] text-[#8f9992]" title="Send later">◷</button>
+                <button type="submit" form="compose-form" className="h-8 rounded-full border border-[#00a941] px-5 text-[11px] text-[#00a941]">{submitting ? 'Sending' : 'Send'}</button>
+              </div>
             </div>
 
-            <form onSubmit={handleSubmit} className="mt-6 grid gap-5 lg:grid-cols-2">
-              <label className="grid gap-2 text-[11px] text-[#25312a]">
-                From
-                <input value={form.from} onChange={(event) => setForm((current) => ({ ...current, from: event.target.value }))} className="quiet-input rounded-[6px] px-4 py-3 text-[11px] outline-none" />
+            {sendLaterOpen ? (
+              <div className="absolute right-8 top-16 z-10 w-[205px] rounded-[6px] bg-white p-3 shadow-[0_3px_12px_rgba(0,0,0,0.18)]">
+                <p className="text-[12px] font-medium text-[#26302b]">Send Later</p>
+                <label className="mt-4 flex items-center justify-between border-b border-[#edf0ee] pb-2 text-[10px] text-[#a2aaa5]">
+                  Pick date &amp; time
+                  <input type="datetime-local" value={form.scheduledAt} onChange={(event) => setForm((current) => ({ ...current, scheduledAt: event.target.value }))} className="absolute h-6 w-6 cursor-pointer opacity-0" />
+                  <span>▣</span>
+                </label>
+                <div className="mt-3 space-y-3 text-[10px] text-[#65716a]">
+                  <button type="button" onClick={() => setSchedule(1)} className="block w-full text-left hover:text-[#00a941]">Tomorrow</button>
+                  <button type="button" onClick={() => setSchedule(1, 10)} className="block w-full text-left hover:text-[#00a941]">Tomorrow, 10:00 AM</button>
+                  <button type="button" onClick={() => setSchedule(1, 11)} className="block w-full text-left hover:text-[#00a941]">Tomorrow, 11:00 AM</button>
+                  <button type="button" onClick={() => setSchedule(1, 15)} className="block w-full text-left hover:text-[#00a941]">Tomorrow, 3:00 PM</button>
+                </div>
+                <div className="mt-5 flex items-center justify-end gap-4 text-[10px]">
+                  <button type="button" onClick={() => setSendLaterOpen(false)} className="text-[#26302b]">Cancel</button>
+                  <button type="button" onClick={() => setSendLaterOpen(false)} className="rounded-full border border-[#00a941] px-4 py-1 text-[#00a941]">Done</button>
+                </div>
+              </div>
+            ) : null}
+
+            <form id="compose-form" onSubmit={handleSubmit} className="mt-7 max-w-[680px] pl-8">
+              <label className="flex min-h-[37px] items-center gap-8 text-[11px] text-[#25312a]">
+                <span className="w-8">From</span>
+                <span className="quiet-input rounded-[6px] px-3 py-2 text-[11px]">{form.from}⌄</span>
               </label>
-              <label className="grid gap-2 text-[11px] text-[#25312a]">
-                Recipients
-                <textarea value={form.recipients} onChange={(event) => setForm((current) => ({ ...current, recipients: event.target.value }))} rows={4} className="quiet-input rounded-[6px] px-4 py-3 text-[11px] outline-none" />
-                <span className="text-[10px] text-[#a0a8a3]">Paste CSV, newline-separated addresses, or semicolon-separated values.</span>
+              <label className="flex min-h-[48px] items-center gap-8 text-[11px] text-[#25312a]">
+                <span className="w-8">To</span>
+                <div className="flex min-w-0 flex-1 flex-wrap items-center gap-1">
+                  {parseRecipients(form.recipients).map((recipient) => (
+                    <span key={recipient} className="rounded-full border border-[#00a941] px-2 py-1 text-[10px] text-[#26302b]">{recipient}</span>
+                  ))}
+                  <input value={recipientDraft} onChange={(event) => setRecipientDraft(event.target.value)} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ',') { event.preventDefault(); const value = recipientDraft.trim(); if (value) { setForm((current) => ({ ...current, recipients: [...parseRecipients(current.recipients), value].join(', ') })); setRecipientDraft(''); } } }} placeholder="recipient@example.com" className="min-w-[150px] flex-1 border-0 px-1 py-2 text-[11px] outline-none placeholder:text-[#b3bab5]" />
+                  <label className="cursor-pointer whitespace-nowrap text-[10px] text-[#00a941]">
+                    ↑ Upload List
+                    <input type="file" accept=".csv,.txt" className="hidden" onChange={handleRecipientFile} />
+                  </label>
+                </div>
               </label>
-              <label className="grid gap-2 text-[11px] text-[#25312a] lg:col-span-2">
-                Subject
-                <input value={form.subject} onChange={(event) => setForm((current) => ({ ...current, subject: event.target.value }))} className="quiet-input rounded-[6px] px-4 py-3 text-[11px] outline-none" />
+              <label className="flex min-h-[37px] items-center gap-8 text-[11px] text-[#25312a]">
+                <span className="w-8">Subject</span>
+                <input value={form.subject} onChange={(event) => setForm((current) => ({ ...current, subject: event.target.value }))} placeholder="Subject" className="w-full border-0 px-0 py-2 text-[11px] outline-none placeholder:text-[#b3bab5]" />
               </label>
               <label className="grid gap-2 text-[11px] text-[#25312a] lg:col-span-2">
                 Body
-                <textarea value={form.body} onChange={(event) => setForm((current) => ({ ...current, body: event.target.value }))} rows={10} className="quiet-input rounded-[8px] px-4 py-3 text-[12px] outline-none" />
+                <div className="quiet-input mt-2 overflow-hidden rounded-[8px]">
+                  <div className="flex flex-wrap items-center gap-4 bg-white px-3 py-2 text-[15px] text-[#919a94]">
+                    {['undo', 'redo', 'formatBlock', 'bold', 'italic', 'underline', 'justifyLeft', 'insertUnorderedList', 'outdent', 'indent', 'strikeThrough'].map((command) => (
+                      <button key={command} type="button" onClick={() => applyEditorCommand(command, command === 'formatBlock' ? 'p' : undefined)} className="hover:text-[#00a941]" title={command}>{command === 'formatBlock' ? 'Tᵀ' : command === 'justifyLeft' ? '≡' : command === 'insertUnorderedList' ? '☷' : command === 'strikeThrough' ? 'S̶' : command.slice(0, 1).toUpperCase()}</button>
+                    ))}
+                  </div>
+                  <div id="email-editor" contentEditable suppressContentEditableWarning onInput={(event) => setForm((current) => ({ ...current, body: event.currentTarget.innerHTML }))} dangerouslySetInnerHTML={{ __html: form.body }} className="min-h-[260px] bg-[#f8faf9] px-3 py-3 text-[12px] leading-6 outline-none" />
+                </div>
               </label>
-              <label className="grid gap-2 text-[11px] text-[#25312a]">
+              <div className="flex items-center gap-4 text-[11px] text-[#25312a]">
+                <span>Delay between 2 emails</span>
+                <input type="number" min="0" value={form.delaySeconds} onChange={(event) => setForm((current) => ({ ...current, delaySeconds: event.target.value }))} className="quiet-input h-7 w-12 rounded-[5px] px-2 text-[11px]" />
+                <span>Hourly Limit</span>
+                <input type="number" min="1" value={form.hourlyLimit} onChange={(event) => setForm((current) => ({ ...current, hourlyLimit: event.target.value }))} className="quiet-input h-7 w-12 rounded-[5px] px-2 text-[11px]" />
+              </div>
+              {attachments.length > 0 ? <div className="flex flex-wrap gap-2 text-[10px] text-[#77817a]">{attachments.map((file) => <span key={file} className="bg-[#f4f7f5] px-2 py-1">{file}</span>)}</div> : null}
+              <label className="hidden text-[11px] text-[#25312a]">
                 Start time
                 <input type="datetime-local" value={form.scheduledAt} onChange={(event) => setForm((current) => ({ ...current, scheduledAt: event.target.value }))} className="quiet-input rounded-[6px] px-4 py-3 text-[11px] outline-none" />
               </label>
-              <label className="grid gap-2 text-[11px] text-[#25312a]">
-                Delay between emails (seconds)
-                <input type="number" min="0" value={form.delaySeconds} onChange={(event) => setForm((current) => ({ ...current, delaySeconds: event.target.value }))} className="quiet-input rounded-[6px] px-4 py-3 text-[11px] outline-none" />
-              </label>
-              <label className="grid gap-2 text-[11px] text-[#25312a]">
-                Hourly limit
-                <input type="number" min="1" value={form.hourlyLimit} onChange={(event) => setForm((current) => ({ ...current, hourlyLimit: event.target.value }))} className="quiet-input rounded-[6px] px-4 py-3 text-[11px] outline-none" />
-              </label>
-              <div className="flex items-end gap-3 lg:col-span-2">
-                <button type="submit" disabled={submitting} className="rounded-full bg-[#00a941] px-5 py-3 text-[11px] font-semibold text-white transition hover:bg-[#008f38] disabled:opacity-60">
-                  {submitting ? 'Scheduling...' : 'Schedule batch'}
-                </button>
-                <button type="button" onClick={() => setComposeOpen(false)} className="px-5 py-3 text-[11px] text-[#78817b]">
-                  Cancel
-                </button>
-              </div>
             </form>
           </div>
         </div>
