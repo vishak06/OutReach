@@ -440,8 +440,11 @@ export default function DashboardPage() {
                   ♧
                   <input type="file" multiple className="hidden" onChange={handleAttachment} />
                 </label>
-                <button type="button" onClick={() => setSendLaterOpen((current) => !current)} className="text-[17px] text-[#8f9992]" title="Send later">◷</button>
-                <button type="submit" form="compose-form" className="h-8 rounded-full border border-[#00a941] px-5 text-[11px] text-[#00a941]">{submitting ? 'Sending' : 'Send'}</button>
+                <button type="button" onClick={() => setSendLaterOpen((current) => !current)} className={`flex items-center gap-2 text-[11px] ${form.scheduledAt ? 'text-[#00a941]' : 'text-[#8f9992]'}`} title="Send later">
+                  <span className="text-[17px]">◷</span>
+                  {form.scheduledAt ? new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }).format(new Date(form.scheduledAt)) : null}
+                </button>
+                <button type="submit" form="compose-form" className="h-8 rounded-full border border-[#00a941] px-5 text-[11px] text-[#00a941]">{submitting ? 'Sending' : form.scheduledAt ? 'Send Later' : 'Send'}</button>
               </div>
             </div>
 
