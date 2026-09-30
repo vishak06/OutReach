@@ -117,7 +117,7 @@ Create a Render PostgreSQL database and Render Key Value service. Create an Elas
 Create a Render **Web Service** connected to this repository:
 
 - Root directory: `backend`
-- Build command: `npm install && npm run build`
+- Build command: `npm install --include=dev && npm run build`
 - Start command: `npm start`
 
 Add these environment variables using the Render PostgreSQL and Key Value connection values:
@@ -156,7 +156,7 @@ npx prisma db push
 Create a second Render **Background Worker** from the same repository:
 
 - Root directory: `backend`
-- Build command: `npm install && npm run build`
+- Build command: `npm install --include=dev && npm run build`
 - Start command: `npm run worker:prod`
 
 Copy the same environment variables from the API service. The API and worker must share the same PostgreSQL and Redis instances.
