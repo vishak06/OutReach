@@ -43,8 +43,8 @@ export function createApp(): express.Express {
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      sameSite: 'lax',
-      secure: false,
+      sameSite: config.nodeEnv === 'production' ? 'none' : 'lax',
+      secure: config.nodeEnv === 'production',
     },
   }));
   app.use(passportInstance.initialize());
