@@ -133,6 +133,18 @@ export default function DashboardPage() {
     }
   }
 
+  useEffect(() => {
+    if (loading || composeOpen) {
+      return;
+    }
+
+    const interval = window.setInterval(() => {
+      void refreshDashboard();
+    }, 5000);
+
+    return () => window.clearInterval(interval);
+  }, [loading, composeOpen]);
+
   async function handleSearch(event: React.FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
 
