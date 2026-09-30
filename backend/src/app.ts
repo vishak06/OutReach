@@ -22,6 +22,10 @@ const passportInstance = configurePassport();
 export function createApp(): express.Express {
   const app = express();
 
+  if (config.nodeEnv === 'production') {
+    app.set('trust proxy', 1);
+  }
+
   const bullBoardAdapter = new ExpressAdapter();
   bullBoardAdapter.setBasePath(config.bullBoardPath);
 
