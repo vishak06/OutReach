@@ -58,9 +58,9 @@ export default function DashboardPage() {
   const [detailId, setDetailId] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [form, setForm] = useState({
-    from: 'ReachInbox <scheduler@reachinbox.ai>',
-    recipients: 'lead@customer.io',
-    subject: 'Your outreach campaign is scheduled',
+    from: '',
+    recipients: '',
+    subject: '',
     body: '<p>Hello, this email was scheduled from ReachInbox.</p>',
     scheduledAt: '',
     delaySeconds: '120',
@@ -78,6 +78,7 @@ export default function DashboardPage() {
         }
 
         setUser(session.user ?? null);
+        setForm((current) => ({ ...current, from: session.user?.email ?? '' }));
         if (!session.authenticated) {
           router.replace('/');
           return;
@@ -487,11 +488,11 @@ export default function DashboardPage() {
                   <div id="email-editor" contentEditable suppressContentEditableWarning onInput={(event) => setForm((current) => ({ ...current, body: event.currentTarget.innerHTML }))} dangerouslySetInnerHTML={{ __html: form.body }} className="min-h-[260px] bg-[#f8faf9] px-3 py-3 text-[12px] leading-6 outline-none" />
                 </div>
               </label>
-              <div className="flex items-center gap-4 text-[11px] text-[#25312a]">
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-[11px] text-[#25312a]">
                 <span>Delay between 2 emails</span>
-                <input type="number" min="0" value={form.delaySeconds} onChange={(event) => setForm((current) => ({ ...current, delaySeconds: event.target.value }))} className="quiet-input h-7 w-12 rounded-[5px] px-2 text-[11px]" />
-                <span>Hourly Limit</span>
-                <input type="number" min="1" value={form.hourlyLimit} onChange={(event) => setForm((current) => ({ ...current, hourlyLimit: event.target.value }))} className="quiet-input h-7 w-12 rounded-[5px] px-2 text-[11px]" />
+                <input type="number" min="0" value={form.delaySeconds} onChange={(event) => setForm((current) => ({ ...current, delaySeconds: event.target.value }))} className="quiet-input h-8 w-[62px] rounded-[6px] px-3 text-[11px]" />
+                <span className="ml-1">Hourly Limit</span>
+                <input type="number" min="1" value={form.hourlyLimit} onChange={(event) => setForm((current) => ({ ...current, hourlyLimit: event.target.value }))} className="quiet-input h-8 w-[62px] rounded-[6px] px-3 text-[11px]" />
               </div>
               {attachments.length > 0 ? <div className="flex flex-wrap gap-2 text-[10px] text-[#77817a]">{attachments.map((file) => <span key={file} className="bg-[#f4f7f5] px-2 py-1">{file}</span>)}</div> : null}
               <label className="hidden text-[11px] text-[#25312a]">
