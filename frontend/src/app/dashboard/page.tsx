@@ -1,7 +1,7 @@
 "use client";
 
 import Link from 'next/link';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { api } from '@/lib/api';
 import type { AppUser, DashboardResponse, EmailRecord } from '@/lib/types';
@@ -54,6 +54,7 @@ export default function DashboardPage() {
   const [sendLaterOpen, setSendLaterOpen] = useState(false);
   const [attachments, setAttachments] = useState<string[]>([]);
   const [recipientDraft, setRecipientDraft] = useState('');
+  const editorRef = useRef<HTMLDivElement | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [detailId, setDetailId] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
@@ -106,6 +107,12 @@ export default function DashboardPage() {
       active = false;
     };
   }, [router]);
+
+  useEffect(() => {
+    if (composeOpen && editorRef.current && !editorRef.current.innerHTML) {
+      editorRef.current.innerHTML = form.body;
+    }
+  }, [composeOpen]);
 
   const visibleEmails = useMemo(() => {
     if (searchResults) {
@@ -494,7 +501,7 @@ export default function DashboardPage() {
                       <button key={command} type="button" onClick={() => applyEditorCommand(command, command === 'formatBlock' ? 'p' : undefined)} className="hover:text-[#00a941]" title={command}>{command === 'formatBlock' ? 'Tᵀ' : command === 'justifyLeft' ? '≡' : command === 'insertUnorderedList' ? '☷' : command === 'strikeThrough' ? 'S̶' : command.slice(0, 1).toUpperCase()}</button>
                     ))}
                   </div>
-                  <div id="email-editor" contentEditable suppressContentEditableWarning onInput={(event) => setForm((current) => ({ ...current, body: event.currentTarget.innerHTML }))} dangerouslySetInnerHTML={{ __html: form.body }} className="min-h-[260px] bg-[#f8faf9] px-3 py-3 text-[12px] leading-6 outline-none" />
+                  <div id="email-editor" ref={editorRef} contentEditable suppressContentEditableWarning onInput={(event) => { const body = event.currentTarget.innerHTML; setForm((current) => ({ ...current, body })); }} className="min-h-[260px] bg-[#f8faf9] px-3 py-3 text-[12px] leading-6 outline-none" />
                 </div>
               </label>
               <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-[11px] text-[#25312a]">
