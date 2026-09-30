@@ -16,6 +16,7 @@ export const config = {
   elasticsearchUrl: process.env.ELASTICSEARCH_URL ?? 'http://localhost:9200',
   bullBoardPath: process.env.BULL_BOARD_PATH ?? '/admin/queues',
   workerConcurrency: toNumber(process.env.WORKER_CONCURRENCY, 4),
+  runWorkerInApi: process.env.RUN_WORKER_IN_API === 'true',
   minSendDelayMs: toNumber(process.env.MIN_SEND_DELAY_MS, 2000),
   hourlyLimit: toNumber(process.env.MAX_EMAILS_PER_HOUR, 200),
   slackWebhookUrl: process.env.SLACK_WEBHOOK_URL,

@@ -78,6 +78,36 @@ The recommended hosted layout is:
 | Elasticsearch | Elastic Cloud | Deployment |
 | Next.js frontend | Vercel | Project rooted at `frontend/` |
 
+### Free-tier alternative
+
+Render free does not provide a free Background Worker or free Key Value service. For a demo deployment, use this layout instead:
+
+| Component | Provider | Notes |
+| --- | --- | --- |
+| API + BullMQ worker | Render free Web Service | Set `RUN_WORKER_IN_API=true` |
+| PostgreSQL | Neon free PostgreSQL | Use the pooled connection URL |
+| Redis | Upstash free Redis | Use the `rediss://` connection URL |
+| Elasticsearch | Optional | The API falls back to PostgreSQL search when unavailable |
+| Frontend | Vercel free | Set `NEXT_PUBLIC_API_URL` |
+
+This is suitable for a demo, but Render free services can sleep when idle. A sleeping service cannot process a job at the exact scheduled second until it wakes. Use a paid always-on worker for production scheduling guarantees.
+
+For the free Render service, use:
+
+```text
+Root directory: backend
+Build command: npm install && npm run build
+Start command: npm start
+```
+
+Add this variable in addition to the normal backend variables:
+
+```env
+RUN_WORKER_IN_API=true
+```
+
+The API process will start the BullMQ worker in the same service. Do not create a separate Render worker when this flag is enabled.
+
 ### 1) Create hosted services
 
 Create a Render PostgreSQL database and Render Key Value service. Create an Elastic Cloud deployment and copy its HTTPS endpoint and credentials. Render and Elastic Cloud may require paid plans for production workloads; use their available starter plans for a demo.
