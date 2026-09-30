@@ -255,15 +255,15 @@ export default function DashboardPage() {
     <div className="app-shell min-h-screen">
       <div className="mx-auto flex min-h-screen w-full max-w-[1180px] gap-2 px-3 lg:px-5">
         <aside className="panel flex w-full max-w-[172px] flex-col px-2 pt-5">
-          <div className="display-font px-3 text-[26px] font-black tracking-[-0.14em] text-[#131717]">ONG</div>
+          <div className="display-font px-3 text-[26px] font-black tracking-[-0.14em] text-[#131717]">OR</div>
 
           <div className="mt-5 rounded-[1.5rem] border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] p-4">
             <p className="text-xs uppercase tracking-[0.28em] text-[var(--muted)]">Signed in</p>
             <div className="mt-3 flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-2xl bg-[rgba(255,255,255,0.08)] text-sm font-semibold">
-                {user?.picture ? <img alt={user.name ?? user.email} src={user.picture} className="h-full w-full object-cover" /> : user?.name?.slice(0, 2).toUpperCase() ?? 'RI'}
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#e8b995] text-[10px] font-semibold text-white">
+                {user?.picture ? <img alt={user.name ?? user.email} src={user.picture} className="h-full w-full object-cover" /> : user?.name?.slice(0, 2).toUpperCase() ?? 'OR'}
               </div>
-              <div>
+              <div className="min-w-0">
                 <p className="font-medium text-white">{user?.name ?? 'Demo User'}</p>
                 <p className="text-xs text-[var(--muted)]">{user?.email ?? 'demo@reachinbox.ai'}</p>
               </div>
