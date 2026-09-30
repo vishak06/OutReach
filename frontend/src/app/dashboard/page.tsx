@@ -277,6 +277,7 @@ export default function DashboardPage() {
                 onClick={() => {
                   setActiveTab(key);
                   setSearchResults(null);
+                  void refreshDashboard();
                 }}
                 className={`rounded-[10px] px-3 py-2 text-left text-[11px] transition ${activeTab === key ? 'bg-[#e4f5ec] text-[#25312a]' : 'text-[#69736d] hover:bg-[#f5f8f6] hover:text-[#25312a]'}`}
               >
@@ -342,14 +343,14 @@ export default function DashboardPage() {
               <div className="flex items-center gap-2">
                 <button
                   type="button"
-                  onClick={() => setActiveTab('scheduled')}
+                  onClick={() => { setActiveTab('scheduled'); void refreshDashboard(); }}
                   className={`px-2 py-2 text-[11px] ${activeTab === 'scheduled' ? 'font-medium text-[#25312a]' : 'text-[#9ca49f]'}`}
                 >
                   Scheduled
                 </button>
                 <button
                   type="button"
-                  onClick={() => setActiveTab('sent')}
+                  onClick={() => { setActiveTab('sent'); void refreshDashboard(); }}
                   className={`px-2 py-2 text-[11px] ${activeTab === 'sent' ? 'font-medium text-[#25312a]' : 'text-[#9ca49f]'}`}
                 >
                   Sent
