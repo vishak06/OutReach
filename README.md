@@ -65,6 +65,112 @@ npm run dev
 
 Open `http://localhost:3000`.
 
+## Deploy with Render and Vercel
+
+The recommended hosted layout is:
+
+| Component | Provider | Service |
+| --- | --- | --- |
+| Express API | Render | Web Service |
+| BullMQ worker | Render | Background Worker |
+| PostgreSQL | Render | PostgreSQL database |
+| Redis | Render | Key Value service |
+| Elasticsearch | Elastic Cloud | Deployment |
+| Next.js frontend | Vercel | Project rooted at `frontend/` |
+
+### 1) Create hosted services
+
+Create a Render PostgreSQL database and Render Key Value service. Create an Elastic Cloud deployment and copy its HTTPS endpoint and credentials. Render and Elastic Cloud may require paid plans for production workloads; use their available starter plans for a demo.
+
+### 2) Deploy the backend API on Render
+
+Create a Render **Web Service** connected to this repository:
+
+- Root directory: `backend`
+- Build command: `npm install && npm run build`
+- Start command: `npm start`
+
+Add these environment variables using the Render PostgreSQL and Key Value connection values:
+
+```env
+PORT=5000
+FRONTEND_URL=https://your-project.vercel.app
+SESSION_SECRET=<long-random-value>
+DATABASE_URL=<render-postgres-connection-string>
+REDIS_URL=<render-redis-url>
+ELASTICSEARCH_URL=<elastic-cloud-https-url>
+MAX_EMAILS_PER_HOUR=200
+MIN_SEND_DELAY_MS=2000
+WORKER_CONCURRENCY=4
+SMTP_HOST=smtp.ethereal.email
+SMTP_PORT=587
+SMTP_SECURE=false
+SMTP_USER=<ethereal-user>
+SMTP_PASS=<ethereal-password>
+GOOGLE_CLIENT_ID=<google-client-id>
+GOOGLE_CLIENT_SECRET=<google-client-secret>
+GOOGLE_CALLBACK_URL=https://your-api.onrender.com/api/auth/google/callback
+SLACK_WEBHOOK_URL=<optional-slack-webhook>
+```
+
+After the first deploy, run the Prisma schema against the hosted database from a local terminal using the production `DATABASE_URL`:
+
+```powershell
+cd backend
+$env:DATABASE_URL="<render-postgres-connection-string>"
+npx prisma db push
+```
+
+### 3) Deploy the BullMQ worker on Render
+
+Create a second Render **Background Worker** from the same repository:
+
+- Root directory: `backend`
+- Build command: `npm install && npm run build`
+- Start command: `npm run worker:prod`
+
+Copy the same environment variables from the API service. The API and worker must share the same PostgreSQL and Redis instances.
+
+### 4) Deploy the frontend on Vercel
+
+Import the repository into Vercel and set:
+
+- Root directory: `frontend`
+- Framework preset: Next.js
+
+Add this environment variable:
+
+```env
+NEXT_PUBLIC_API_URL=https://your-api.onrender.com
+```
+
+Deploy the frontend, then replace `FRONTEND_URL` on Render with the actual Vercel URL and redeploy the API.
+
+### 5) Configure Google OAuth
+
+In Google Cloud Console, add these authorized values:
+
+- JavaScript origin: `https://your-project.vercel.app`
+- Redirect URI: `https://your-api.onrender.com/api/auth/google/callback`
+
+Update `GOOGLE_CALLBACK_URL` if either provider URL changes.
+
+### 6) Verify deployment
+
+Check the API:
+
+```text
+https://your-api.onrender.com/api/health
+```
+
+Check the queue dashboard:
+
+```text
+https://your-api.onrender.com/admin/queues
+```
+
+Then log in through Vercel, schedule a short-delay email, and confirm the job moves through the Render worker and appears under Sent.
+
 ### 4) Development terminals
 
 Run these processes at the same time:
