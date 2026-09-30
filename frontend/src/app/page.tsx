@@ -1,7 +1,11 @@
 "use client";
 
 export default function Home() {
-  const apiBase = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
+  const apiBase = process.env.NEXT_PUBLIC_API_URL ?? (
+    process.env.NODE_ENV === "production"
+      ? "https://outreach-emea.onrender.com"
+      : "http://localhost:5000"
+  );
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-white px-5 py-10">

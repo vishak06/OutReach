@@ -1,6 +1,10 @@
 import type { DashboardResponse, EmailRecord, SearchResponse, SessionResponse } from './types';
 
-const apiBase = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:5000';
+const apiBase = process.env.NEXT_PUBLIC_API_URL ?? (
+  process.env.NODE_ENV === 'production'
+    ? 'https://outreach-emea.onrender.com'
+    : 'http://localhost:5000'
+);
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const response = await fetch(`${apiBase}${path}`, {
