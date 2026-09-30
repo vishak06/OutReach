@@ -107,7 +107,7 @@ export function createApp(): express.Express {
           return;
         }
 
-        res.json({ authenticated: true, user });
+        res.redirect(`${config.frontendUrl}/dashboard`);
       });
     } catch (error) {
       next(error);
