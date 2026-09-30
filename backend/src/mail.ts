@@ -14,6 +14,9 @@ async function createTransporter(): Promise<nodemailer.Transporter> {
       port: Number(process.env.SMTP_PORT ?? 587),
       secure: process.env.SMTP_SECURE === 'true',
       requireTLS: process.env.SMTP_SECURE !== 'true',
+      tls: {
+        maxVersion: 'TLSv1.2',
+      },
       auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS,
@@ -28,6 +31,9 @@ async function createTransporter(): Promise<nodemailer.Transporter> {
     port: account.smtp.port,
     secure: account.smtp.secure,
     requireTLS: !account.smtp.secure,
+    tls: {
+      maxVersion: 'TLSv1.2',
+    },
     auth: {
       user: account.user,
       pass: account.pass,
