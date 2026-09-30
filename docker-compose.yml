@@ -15,7 +15,7 @@ services:
     image: postgres:15-alpine
     container_name: outreach-postgres
     ports:
-      - "5432:5432"
+      - "5433:5432"
     environment:
       POSTGRES_USER: outreach
       POSTGRES_PASSWORD: outreach_pass

@@ -272,17 +272,6 @@ SMTP_PASS=your_ethereal_password
 
 The worker requires a complete `SMTP_*` credential set to use a manually configured account. If these values are omitted, it creates a temporary Ethereal account automatically.
 
-### Recommended hosted email delivery
-
-Render free networking may not allow SMTP connections reliably. For hosted deployment, use Resend over HTTPS:
-
-```env
-RESEND_API_KEY=<resend-api-key>
-RESEND_FROM=ReachInbox <onboarding@resend.dev>
-```
-
-When `RESEND_API_KEY` is present, the worker uses Resend and does not open an SMTP connection. For production, verify a sending domain in Resend and use an address from that domain in `RESEND_FROM`.
-
 ### Optional Google OAuth
 
 ```env
