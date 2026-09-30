@@ -60,15 +60,15 @@ export default function EmailDetailPage() {
   }, [params.emailId, router]);
 
   if (loading) {
-    return <div className="flex min-h-screen items-center justify-center text-sm text-[var(--muted)]">Loading email detail...</div>;
+    return <div className="flex min-h-screen items-center justify-center text-sm text-[#a0a8a3]">Loading email detail...</div>;
   }
 
   if (!email) {
     return (
-      <div className="flex min-h-screen items-center justify-center text-sm text-[var(--muted)]">
-        <div className="panel rounded-[2rem] p-8 text-center">
-          <p className="display-font text-3xl text-white">Email not found</p>
-          <Link href="/dashboard" className="mt-4 inline-flex rounded-full bg-[var(--accent)] px-5 py-3 text-sm font-semibold text-[#08111d]">
+      <div className="flex min-h-screen items-center justify-center text-sm text-[#a0a8a3]">
+        <div className="panel p-8 text-center">
+          <p className="display-font text-3xl text-[#25312a]">Email not found</p>
+          <Link href="/dashboard" className="mt-4 inline-flex rounded-full bg-[#00a941] px-5 py-3 text-sm font-semibold text-white">
             Back to dashboard
           </Link>
         </div>
@@ -77,56 +77,55 @@ export default function EmailDetailPage() {
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden px-4 py-6 lg:px-8">
-      <div className="absolute inset-0 hero-grid opacity-20" />
-      <div className="relative mx-auto flex min-h-screen w-full max-w-6xl flex-col gap-6">
-        <div className="panel flex items-center justify-between rounded-[2rem] px-5 py-4 lg:px-6">
+    <div className="app-shell min-h-screen px-4 py-6 lg:px-8">
+      <div className="mx-auto flex min-h-screen w-full max-w-6xl flex-col gap-6">
+        <div className="panel flex items-center justify-between px-2 py-4 lg:px-3">
           <div>
-            <p className="text-xs uppercase tracking-[0.3em] text-[var(--muted)]">Email detail</p>
-            <h1 className="display-font mt-2 text-3xl text-white">{email.subject}</h1>
+            <p className="text-[10px] text-[#a0a8a3]">Email detail</p>
+            <h1 className="display-font mt-2 text-2xl text-[#25312a]">{email.subject}</h1>
           </div>
           <div className="flex items-center gap-3">
-            <Link href="/dashboard" className="rounded-full border border-[rgba(255,255,255,0.12)] px-4 py-2 text-sm text-white">
+            <Link href="/dashboard" className="px-4 py-2 text-[11px] text-[#78817b]">
               Back
             </Link>
           </div>
         </div>
 
         <div className="grid gap-6 lg:grid-cols-[0.7fr_1.3fr]">
-          <div className="panel rounded-[2rem] p-6">
-            <p className="text-xs uppercase tracking-[0.3em] text-[var(--muted)]">Recipients</p>
-            <p className="mt-2 text-2xl font-semibold text-white">{email.to}</p>
-            <div className="mt-6 grid gap-4 text-sm text-[var(--muted)]">
+          <div className="panel p-6">
+            <p className="text-[10px] text-[#a0a8a3]">Recipients</p>
+            <p className="mt-2 text-xl font-semibold text-[#25312a]">{email.to}</p>
+            <div className="mt-6 grid gap-4 text-[11px] text-[#a0a8a3]">
               <div>
-                <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted)]">From</p>
-                <p className="mt-1 text-white">{email.from}</p>
+                <p className="text-[10px] uppercase tracking-[0.18em] text-[#a0a8a3]">From</p>
+                <p className="mt-1 text-[#25312a]">{email.from}</p>
               </div>
               <div>
-                <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted)]">Scheduled for</p>
-                <p className="mt-1 text-white">{prettyDate(email.scheduledAt)}</p>
+                <p className="text-[10px] uppercase tracking-[0.18em] text-[#a0a8a3]">Scheduled for</p>
+                <p className="mt-1 text-[#25312a]">{prettyDate(email.scheduledAt)}</p>
               </div>
               <div>
-                <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted)]">Sent at</p>
-                <p className="mt-1 text-white">{prettyDate(email.sentAt)}</p>
+                <p className="text-[10px] uppercase tracking-[0.18em] text-[#a0a8a3]">Sent at</p>
+                <p className="mt-1 text-[#25312a]">{prettyDate(email.sentAt)}</p>
               </div>
               <div>
-                <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted)]">Status</p>
-                <p className="mt-1 text-white">{email.status}</p>
+                <p className="text-[10px] uppercase tracking-[0.18em] text-[#a0a8a3]">Status</p>
+                <p className="mt-1 text-[#25312a]">{email.status}</p>
               </div>
               {user ? (
                 <div>
-                  <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted)]">Owner</p>
-                  <p className="mt-1 text-white">{user.email}</p>
+                  <p className="text-[10px] uppercase tracking-[0.18em] text-[#a0a8a3]">Owner</p>
+                  <p className="mt-1 text-[#25312a]">{user.email}</p>
                 </div>
               ) : null}
             </div>
           </div>
 
-          <div className="panel rounded-[2rem] p-6">
-            <div className="flex items-center justify-between gap-4 border-b border-[rgba(255,255,255,0.08)] pb-4">
+          <div className="panel p-6">
+            <div className="flex items-center justify-between gap-4 pb-4">
               <div>
-                <p className="text-xs uppercase tracking-[0.3em] text-[var(--muted)]">Body</p>
-                <h2 className="display-font mt-2 text-2xl text-white">Rendered message</h2>
+                <p className="text-[10px] text-[#a0a8a3]">Body</p>
+                <h2 className="display-font mt-2 text-2xl text-[#25312a]">Rendered message</h2>
               </div>
               {email.status !== 'sent' ? (
                 <button
@@ -136,7 +135,7 @@ export default function EmailDetailPage() {
                     const refreshed = await api.getEmail(email.id);
                     setEmail(refreshed.email);
                   }}
-                  className="rounded-full bg-[var(--accent)] px-4 py-2 text-sm font-semibold text-[#08111d]"
+                  className="rounded-full bg-[#00a941] px-4 py-2 text-[11px] font-semibold text-white"
                 >
                   Send now
                 </button>
@@ -144,19 +143,19 @@ export default function EmailDetailPage() {
             </div>
 
             <div className="prose prose-invert mt-6 max-w-none text-[var(--foreground)] prose-p:text-[var(--foreground)] prose-a:text-[var(--accent)]">
-              <div className="whitespace-pre-wrap rounded-[1.5rem] border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] p-5 leading-7 text-[var(--foreground)]">
+              <div className="whitespace-pre-wrap bg-[#f7f9f8] p-5 text-[12px] leading-7 text-[#25312a]">
                 {email.body}
               </div>
             </div>
 
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
-              <div className="rounded-[1.5rem] border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] p-4">
-                <p className="text-sm text-[var(--muted)]">Queue job</p>
-                <p className="mt-1 font-medium text-white">{email.queueJobId ?? 'Completed'}</p>
+              <div className="bg-[#f7f9f8] p-4">
+                <p className="text-[11px] text-[#a0a8a3]">Queue job</p>
+                <p className="mt-1 text-[11px] font-medium text-[#25312a]">{email.queueJobId ?? 'Completed'}</p>
               </div>
-              <div className="rounded-[1.5rem] border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] p-4">
-                <p className="text-sm text-[var(--muted)]">Error</p>
-                <p className="mt-1 font-medium text-white">{email.errorMessage ?? 'None'}</p>
+              <div className="bg-[#f7f9f8] p-4">
+                <p className="text-[11px] text-[#a0a8a3]">Error</p>
+                <p className="mt-1 text-[11px] font-medium text-[#25312a]">{email.errorMessage ?? 'None'}</p>
               </div>
             </div>
           </div>

@@ -187,21 +187,10 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden">
-      <div className="absolute inset-0 hero-grid opacity-25" />
-      <div className="absolute left-1/3 top-0 h-80 w-80 rounded-full bg-[rgba(184,255,106,0.08)] blur-3xl" />
-
-      <div className="relative mx-auto flex min-h-screen w-full max-w-[1600px] gap-6 p-4 lg:p-6">
-        <aside className="panel flex w-full max-w-[290px] flex-col rounded-[2rem] p-5 lg:p-6">
-          <div className="flex items-center gap-3 border-b border-[rgba(255,255,255,0.08)] pb-5">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[rgba(184,255,106,0.14)] text-sm font-semibold text-[var(--accent)]">
-              RI
-            </div>
-            <div>
-              <p className="display-font text-lg text-white">ReachInbox</p>
-              <p className="text-xs text-[var(--muted)]">Email scheduler</p>
-            </div>
-          </div>
+    <div className="app-shell min-h-screen">
+      <div className="mx-auto flex min-h-screen w-full max-w-[1180px] gap-2 px-3 lg:px-5">
+        <aside className="panel flex w-full max-w-[172px] flex-col px-2 pt-5">
+          <div className="display-font px-3 text-[26px] font-black tracking-[-0.14em] text-[#131717]">ONG</div>
 
           <div className="mt-5 rounded-[1.5rem] border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] p-4">
             <p className="text-xs uppercase tracking-[0.28em] text-[var(--muted)]">Signed in</p>
@@ -219,12 +208,12 @@ export default function DashboardPage() {
           <button
             type="button"
             onClick={() => setComposeOpen(true)}
-            className="mt-5 rounded-full bg-[var(--accent)] px-4 py-3 text-sm font-semibold text-[#08111d] transition hover:bg-[var(--accent-strong)]"
+            className="mt-4 h-8 rounded-full border-2 border-[#00a941] px-4 text-[11px] font-medium text-[#00a941] transition hover:bg-[#effaf3]"
           >
             Compose New Email
           </button>
 
-          <nav className="mt-6 flex flex-1 flex-col gap-2">
+          <nav className="mt-6 flex flex-1 flex-col gap-1">
             {([
               ['scheduled', 'Scheduled Emails'],
               ['sent', 'Sent Emails'],
@@ -236,7 +225,7 @@ export default function DashboardPage() {
                   setActiveTab(key);
                   setSearchResults(null);
                 }}
-                className={`rounded-2xl px-4 py-3 text-left text-sm transition ${activeTab === key ? 'bg-[rgba(184,255,106,0.12)] text-white' : 'text-[var(--muted)] hover:bg-[rgba(255,255,255,0.04)] hover:text-white'}`}
+                className={`rounded-[10px] px-3 py-2 text-left text-[11px] transition ${activeTab === key ? 'bg-[#e4f5ec] text-[#25312a]' : 'text-[#69736d] hover:bg-[#f5f8f6] hover:text-[#25312a]'}`}
               >
                 {label}
               </button>
@@ -245,7 +234,7 @@ export default function DashboardPage() {
               href={api.baseUrl.replace(/\/$/, '') + '/admin/queues'}
               target="_blank"
               rel="noreferrer"
-              className="rounded-2xl px-4 py-3 text-sm text-[var(--muted)] transition hover:bg-[rgba(255,255,255,0.04)] hover:text-white"
+              className="rounded-[10px] px-3 py-2 text-[11px] text-[#69736d] transition hover:bg-[#f5f8f6] hover:text-[#25312a]"
             >
               BullMQ Admin
             </a>
@@ -254,39 +243,35 @@ export default function DashboardPage() {
           <button
             type="button"
             onClick={handleLogout}
-            className="mt-4 rounded-full border border-[rgba(255,255,255,0.12)] px-4 py-3 text-sm text-white transition hover:bg-[rgba(255,255,255,0.05)]"
+            className="mt-4 px-3 py-3 text-left text-[11px] text-[#a0a8a3] transition hover:text-[#25312a]"
           >
             Logout
           </button>
         </aside>
 
-        <section className="panel flex min-w-0 flex-1 flex-col rounded-[2rem] p-5 lg:p-6">
-          <header className="flex flex-col gap-4 border-b border-[rgba(255,255,255,0.08)] pb-5 xl:flex-row xl:items-end xl:justify-between">
+        <section className="panel flex min-w-0 flex-1 flex-col px-3 pb-8 pt-8 lg:px-5">
+          <header className="flex flex-col gap-4 pb-3 xl:flex-row xl:items-center xl:justify-between">
             <div>
-              <p className="text-xs uppercase tracking-[0.3em] text-[var(--muted)]">Dashboard</p>
-              <h1 className="display-font mt-2 text-3xl text-white lg:text-5xl">Scheduled and sent mail in one place.</h1>
-              <p className="mt-2 max-w-2xl text-sm leading-6 text-[var(--muted)]">
-                Compose batches, review queue health, and inspect each email as it moves through BullMQ, Redis, Postgres, and Ethereal.
-              </p>
+              <p className="sr-only">Dashboard</p>
             </div>
 
             <form onSubmit={handleSearch} className="flex w-full max-w-xl gap-3">
               <input
                 value={searchQuery}
                 onChange={(event) => setSearchQuery(event.target.value)}
-                placeholder="Search subject, body, recipient"
-                className="w-full rounded-full border border-[rgba(255,255,255,0.12)] bg-[rgba(255,255,255,0.04)] px-5 py-3 text-sm text-white outline-none placeholder:text-[var(--muted)] focus:border-[rgba(184,255,106,0.35)]"
+                placeholder="Search"
+                className="quiet-input h-9 w-full rounded-full px-5 text-[11px] text-[#303934] outline-none placeholder:text-[#aeb7b1]"
               />
               <button
                 type="submit"
-                className="rounded-full bg-[var(--accent)] px-5 py-3 text-sm font-semibold text-[#08111d] transition hover:bg-[var(--accent-strong)]"
+                className="hidden"
               >
                 Search
               </button>
             </form>
           </header>
 
-          <div className="mt-5 grid gap-4 sm:grid-cols-3">
+          <div className="hidden">
             {[
               ['Scheduled', dashboard?.summary.scheduledCount ?? 0],
               ['Sent', dashboard?.summary.sentCount ?? 0],
@@ -299,20 +284,20 @@ export default function DashboardPage() {
             ))}
           </div>
 
-          <div className="mt-6 flex min-h-0 flex-1 flex-col rounded-[1.5rem] border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.02)]">
-            <div className="flex items-center justify-between border-b border-[rgba(255,255,255,0.08)] px-5 py-4">
+          <div className="mt-2 flex min-h-0 flex-1 flex-col">
+            <div className="flex items-center justify-between px-3 py-3">
               <div className="flex items-center gap-2">
                 <button
                   type="button"
                   onClick={() => setActiveTab('scheduled')}
-                  className={`rounded-full px-4 py-2 text-sm ${activeTab === 'scheduled' ? 'bg-[rgba(184,255,106,0.12)] text-white' : 'text-[var(--muted)]'}`}
+                  className={`px-2 py-2 text-[11px] ${activeTab === 'scheduled' ? 'font-medium text-[#25312a]' : 'text-[#9ca49f]'}`}
                 >
                   Scheduled
                 </button>
                 <button
                   type="button"
                   onClick={() => setActiveTab('sent')}
-                  className={`rounded-full px-4 py-2 text-sm ${activeTab === 'sent' ? 'bg-[rgba(184,255,106,0.12)] text-white' : 'text-[var(--muted)]'}`}
+                  className={`px-2 py-2 text-[11px] ${activeTab === 'sent' ? 'font-medium text-[#25312a]' : 'text-[#9ca49f]'}`}
                 >
                   Sent
                 </button>
@@ -320,27 +305,27 @@ export default function DashboardPage() {
               <button
                 type="button"
                 onClick={refreshDashboard}
-                className="rounded-full border border-[rgba(255,255,255,0.12)] px-4 py-2 text-sm text-white transition hover:bg-[rgba(255,255,255,0.05)]"
+                className="px-2 py-2 text-[11px] text-[#9ca49f] transition hover:text-[#25312a]"
               >
                 Refresh
               </button>
             </div>
 
-            <div className="scrollbar min-h-0 flex-1 overflow-auto px-5 py-2">
-              {message ? <p className="mb-4 rounded-2xl border border-[rgba(184,255,106,0.18)] bg-[rgba(184,255,106,0.06)] px-4 py-3 text-sm text-[var(--accent)]">{message}</p> : null}
+            <div className="scrollbar min-h-0 flex-1 overflow-auto px-1 py-2">
+              {message ? <p className="mb-4 px-3 py-2 text-[11px] text-[var(--accent)]">{message}</p> : null}
 
               {loadingDashboard ? (
                 <div className="px-2 py-10 text-sm text-[var(--muted)]">Loading emails...</div>
               ) : visibleEmails.length === 0 ? (
-                <div className="flex min-h-[280px] flex-col items-center justify-center rounded-[1.5rem] border border-dashed border-[rgba(255,255,255,0.12)] bg-[rgba(255,255,255,0.02)] text-center">
-                  <p className="display-font text-2xl text-white">No emails yet</p>
-                  <p className="mt-2 max-w-md text-sm leading-6 text-[var(--muted)]">
+                <div className="flex min-h-[280px] flex-col items-center justify-center text-center">
+                  <p className="display-font text-2xl text-[#25312a]">No emails yet</p>
+                  <p className="mt-2 max-w-md text-[11px] text-[#a0a8a3]">
                     Schedule a batch or clear the search filter to see queued and sent jobs.
                   </p>
                 </div>
               ) : (
-                <table className="w-full border-separate border-spacing-y-3">
-                  <thead className="text-left text-xs uppercase tracking-[0.28em] text-[var(--muted)]">
+                <table className="w-full border-separate border-spacing-y-0">
+                  <thead className="text-left text-[10px] uppercase tracking-[0.18em] text-[#a0a8a3]">
                     <tr>
                       <th className="px-4 py-2">Email</th>
                       <th className="px-4 py-2">Subject</th>
@@ -351,12 +336,12 @@ export default function DashboardPage() {
                   </thead>
                   <tbody>
                     {visibleEmails.map((email) => (
-                      <tr key={email.id} className="table-row rounded-2xl bg-[rgba(255,255,255,0.03)]">
-                        <td className="rounded-l-2xl px-4 py-4 text-sm text-white">{email.to}</td>
-                        <td className="px-4 py-4 text-sm text-white">{email.subject}</td>
-                        <td className="px-4 py-4 text-sm text-[var(--muted)]">{formatDate(activeTab === 'sent' ? email.sentAt : email.scheduledAt)}</td>
+                      <tr key={email.id} className="email-row">
+                        <td className="px-3 py-3 text-[11px] text-[#25312a]">{email.to}</td>
+                        <td className="px-3 py-3 text-[11px] text-[#25312a]">{email.subject}</td>
+                        <td className="px-3 py-3 text-[11px] text-[#a0a8a3]">{formatDate(activeTab === 'sent' ? email.sentAt : email.scheduledAt)}</td>
                         <td className="px-4 py-4">
-                          <span className={`inline-flex rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] ${statusTone(email.status)}`}>
+                          <span className={`inline-flex rounded-full px-3 py-1 text-[9px] font-medium ${statusTone(email.status)}`}>
                             {email.status}
                           </span>
                         </td>
@@ -390,53 +375,53 @@ export default function DashboardPage() {
       </div>
 
       {composeOpen ? (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(6,10,18,0.72)] p-4 backdrop-blur-sm">
-          <div className="panel-strong w-full max-w-4xl rounded-[2rem] p-6 lg:p-8">
+        <div className="fixed inset-0 z-50 overflow-auto bg-white p-4 sm:p-8">
+          <div className="panel mx-auto w-full max-w-[1000px] p-2 lg:p-6">
             <div className="flex items-start justify-between gap-4">
               <div>
-                <p className="text-xs uppercase tracking-[0.3em] text-[var(--muted)]">Compose</p>
-                <h2 className="display-font mt-2 text-3xl text-white">Schedule a new email batch</h2>
+                <p className="text-[10px] text-[#a0a8a3]">Compose</p>
+                <h2 className="mt-2 text-[17px] font-medium text-[#25312a]">Compose New Email</h2>
               </div>
-              <button type="button" onClick={() => setComposeOpen(false)} className="rounded-full border border-[rgba(255,255,255,0.12)] px-4 py-2 text-sm text-white">
+              <button type="button" onClick={() => setComposeOpen(false)} className="px-4 py-2 text-[11px] text-[#78817b]">
                 Close
               </button>
             </div>
 
             <form onSubmit={handleSubmit} className="mt-6 grid gap-5 lg:grid-cols-2">
-              <label className="grid gap-2 text-sm text-white">
+              <label className="grid gap-2 text-[11px] text-[#25312a]">
                 From
-                <input value={form.from} onChange={(event) => setForm((current) => ({ ...current, from: event.target.value }))} className="rounded-2xl border border-[rgba(255,255,255,0.12)] bg-[rgba(255,255,255,0.04)] px-4 py-3 outline-none" />
+                <input value={form.from} onChange={(event) => setForm((current) => ({ ...current, from: event.target.value }))} className="quiet-input rounded-[6px] px-4 py-3 text-[11px] outline-none" />
               </label>
-              <label className="grid gap-2 text-sm text-white">
+              <label className="grid gap-2 text-[11px] text-[#25312a]">
                 Recipients
-                <textarea value={form.recipients} onChange={(event) => setForm((current) => ({ ...current, recipients: event.target.value }))} rows={4} className="rounded-2xl border border-[rgba(255,255,255,0.12)] bg-[rgba(255,255,255,0.04)] px-4 py-3 outline-none" />
-                <span className="text-xs text-[var(--muted)]">Paste CSV, newline-separated addresses, or semicolon-separated values.</span>
+                <textarea value={form.recipients} onChange={(event) => setForm((current) => ({ ...current, recipients: event.target.value }))} rows={4} className="quiet-input rounded-[6px] px-4 py-3 text-[11px] outline-none" />
+                <span className="text-[10px] text-[#a0a8a3]">Paste CSV, newline-separated addresses, or semicolon-separated values.</span>
               </label>
-              <label className="grid gap-2 text-sm text-white lg:col-span-2">
+              <label className="grid gap-2 text-[11px] text-[#25312a] lg:col-span-2">
                 Subject
-                <input value={form.subject} onChange={(event) => setForm((current) => ({ ...current, subject: event.target.value }))} className="rounded-2xl border border-[rgba(255,255,255,0.12)] bg-[rgba(255,255,255,0.04)] px-4 py-3 outline-none" />
+                <input value={form.subject} onChange={(event) => setForm((current) => ({ ...current, subject: event.target.value }))} className="quiet-input rounded-[6px] px-4 py-3 text-[11px] outline-none" />
               </label>
-              <label className="grid gap-2 text-sm text-white lg:col-span-2">
+              <label className="grid gap-2 text-[11px] text-[#25312a] lg:col-span-2">
                 Body
-                <textarea value={form.body} onChange={(event) => setForm((current) => ({ ...current, body: event.target.value }))} rows={7} className="rounded-2xl border border-[rgba(255,255,255,0.12)] bg-[rgba(255,255,255,0.04)] px-4 py-3 outline-none" />
+                <textarea value={form.body} onChange={(event) => setForm((current) => ({ ...current, body: event.target.value }))} rows={10} className="quiet-input rounded-[8px] px-4 py-3 text-[12px] outline-none" />
               </label>
-              <label className="grid gap-2 text-sm text-white">
+              <label className="grid gap-2 text-[11px] text-[#25312a]">
                 Start time
-                <input type="datetime-local" value={form.scheduledAt} onChange={(event) => setForm((current) => ({ ...current, scheduledAt: event.target.value }))} className="rounded-2xl border border-[rgba(255,255,255,0.12)] bg-[rgba(255,255,255,0.04)] px-4 py-3 outline-none" />
+                <input type="datetime-local" value={form.scheduledAt} onChange={(event) => setForm((current) => ({ ...current, scheduledAt: event.target.value }))} className="quiet-input rounded-[6px] px-4 py-3 text-[11px] outline-none" />
               </label>
-              <label className="grid gap-2 text-sm text-white">
+              <label className="grid gap-2 text-[11px] text-[#25312a]">
                 Delay between emails (seconds)
-                <input type="number" min="0" value={form.delaySeconds} onChange={(event) => setForm((current) => ({ ...current, delaySeconds: event.target.value }))} className="rounded-2xl border border-[rgba(255,255,255,0.12)] bg-[rgba(255,255,255,0.04)] px-4 py-3 outline-none" />
+                <input type="number" min="0" value={form.delaySeconds} onChange={(event) => setForm((current) => ({ ...current, delaySeconds: event.target.value }))} className="quiet-input rounded-[6px] px-4 py-3 text-[11px] outline-none" />
               </label>
-              <label className="grid gap-2 text-sm text-white">
+              <label className="grid gap-2 text-[11px] text-[#25312a]">
                 Hourly limit
-                <input type="number" min="1" value={form.hourlyLimit} onChange={(event) => setForm((current) => ({ ...current, hourlyLimit: event.target.value }))} className="rounded-2xl border border-[rgba(255,255,255,0.12)] bg-[rgba(255,255,255,0.04)] px-4 py-3 outline-none" />
+                <input type="number" min="1" value={form.hourlyLimit} onChange={(event) => setForm((current) => ({ ...current, hourlyLimit: event.target.value }))} className="quiet-input rounded-[6px] px-4 py-3 text-[11px] outline-none" />
               </label>
               <div className="flex items-end gap-3 lg:col-span-2">
-                <button type="submit" disabled={submitting} className="rounded-full bg-[var(--accent)] px-5 py-3 text-sm font-semibold text-[#08111d] transition hover:bg-[var(--accent-strong)] disabled:opacity-60">
+                <button type="submit" disabled={submitting} className="rounded-full bg-[#00a941] px-5 py-3 text-[11px] font-semibold text-white transition hover:bg-[#008f38] disabled:opacity-60">
                   {submitting ? 'Scheduling...' : 'Schedule batch'}
                 </button>
-                <button type="button" onClick={() => setComposeOpen(false)} className="rounded-full border border-[rgba(255,255,255,0.12)] px-5 py-3 text-sm text-white">
+                <button type="button" onClick={() => setComposeOpen(false)} className="px-5 py-3 text-[11px] text-[#78817b]">
                   Cancel
                 </button>
               </div>
