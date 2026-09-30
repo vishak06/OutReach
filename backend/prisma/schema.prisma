@@ -13,6 +13,7 @@ model User {
   name      String?
   picture   String?
   googleId  String?  @unique
+  passwordHash String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   

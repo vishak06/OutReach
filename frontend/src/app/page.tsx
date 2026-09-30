@@ -16,9 +16,9 @@ export default function Home() {
           or sign up through email
           <span className="h-px flex-1 bg-[#edf0ee]" />
         </div>
-        <form action={`${apiBase}/api/auth/dev-login`} method="post" className="space-y-2">
+        <form action={`${apiBase}/api/auth/email`} method="post" className="space-y-2">
           <input name="email" type="email" placeholder="Email ID" className="quiet-input h-10 w-full rounded-[7px] px-3 text-[11px] text-[#252b28] placeholder:text-[#8e9792]" />
-          <input name="password" type="password" placeholder="Password" className="quiet-input h-10 w-full rounded-[7px] px-3 text-[11px] text-[#252b28] placeholder:text-[#8e9792]" />
+          <input name="password" type="password" minLength={6} required placeholder="Password" className="quiet-input h-10 w-full rounded-[7px] px-3 text-[11px] text-[#252b28] placeholder:text-[#8e9792]" />
           <button type="submit" className="mt-3 h-10 w-full rounded-[7px] bg-[#00a941] text-[12px] font-medium text-white transition hover:bg-[#008f38]">Login</button>
         </form>
       </section>

@@ -14,6 +14,7 @@ import { rehydrateScheduledEmails } from './seed';
 import { refreshEmailIndex, searchEmails, indexEmail } from './search';
 import { checkHourlyRateLimit } from './rate-limiter';
 import { sendEmail } from './mail';
+import { hashPassword, verifyPassword } from './password';
 import type { CreateEmailRequest, AppUser } from './types';
 
 const passportInstance = configurePassport();
@@ -34,6 +35,7 @@ export function createApp(): express.Express {
     credentials: true,
   }));
   app.use(express.json({ limit: '2mb' }));
+  app.use(express.urlencoded({ extended: true }));
   app.use(cookieParser());
   app.use(session({
     secret: config.sessionSecret,
@@ -83,6 +85,59 @@ export function createApp(): express.Express {
         res.json({ ok: true });
       });
     });
+  });
+
+  app.post('/api/auth/email', async (req, res, next) => {
+    try {
+      const email = typeof req.body?.email === 'string' ? req.body.email.trim().toLowerCase() : '';
+      const password = typeof req.body?.password === 'string' ? req.body.password : '';
+
+      if (!email || !password || password.length < 6) {
+        res.redirect(`${config.frontendUrl}/?error=invalid_credentials`);
+        return;
+      }
+
+      const existingUser = await prisma.user.findUnique({ where: { email } });
+      let user = existingUser;
+
+      if (existingUser?.passwordHash) {
+        const validPassword = await verifyPassword(password, existingUser.passwordHash);
+
+        if (!validPassword) {
+          res.redirect(`${config.frontendUrl}/?error=invalid_credentials`);
+          return;
+        }
+      } else if (existingUser) {
+        user = await prisma.user.update({
+          where: { id: existingUser.id },
+          data: { passwordHash: await hashPassword(password) },
+        });
+      } else {
+        user = await prisma.user.create({
+          data: {
+            email,
+            name: email.split('@')[0],
+            passwordHash: await hashPassword(password),
+          },
+        });
+      }
+
+      if (!user) {
+        res.redirect(`${config.frontendUrl}/?error=invalid_credentials`);
+        return;
+      }
+
+      req.login(user, (error) => {
+        if (error) {
+          next(error);
+          return;
+        }
+
+        res.redirect(`${config.frontendUrl}/dashboard`);
+      });
+    } catch (error) {
+      next(error);
+    }
   });
 
   app.post('/api/auth/dev-login', async (req, res, next) => {
