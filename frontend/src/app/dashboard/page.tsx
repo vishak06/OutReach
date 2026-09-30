@@ -214,11 +214,6 @@ export default function DashboardPage() {
     setSendLaterOpen(false);
   }
 
-  function applyEditorCommand(command: string, value?: string): void {
-    document.execCommand(command, false, value);
-    document.getElementById('email-editor')?.focus();
-  }
-
   function handleRecipientFile(event: React.ChangeEvent<HTMLInputElement>): void {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -496,11 +491,6 @@ export default function DashboardPage() {
               <label className="grid gap-2 text-[11px] text-[#25312a] lg:col-span-2">
                 Body
                 <div className="quiet-input mt-2 overflow-hidden rounded-[8px]">
-                  <div className="flex flex-wrap items-center gap-4 bg-white px-3 py-2 text-[15px] text-[#919a94]">
-                    {['undo', 'redo', 'formatBlock', 'bold', 'italic', 'underline', 'justifyLeft', 'insertUnorderedList', 'outdent', 'indent', 'strikeThrough'].map((command) => (
-                      <button key={command} type="button" onClick={() => applyEditorCommand(command, command === 'formatBlock' ? 'p' : undefined)} className="hover:text-[#00a941]" title={command}>{command === 'formatBlock' ? 'Tᵀ' : command === 'justifyLeft' ? '≡' : command === 'insertUnorderedList' ? '☷' : command === 'strikeThrough' ? 'S̶' : command.slice(0, 1).toUpperCase()}</button>
-                    ))}
-                  </div>
                   <div id="email-editor" ref={editorRef} contentEditable suppressContentEditableWarning onInput={(event) => { const body = event.currentTarget.innerHTML; setForm((current) => ({ ...current, body })); }} className="min-h-[260px] bg-[#f8faf9] px-3 py-3 text-[12px] leading-6 outline-none" />
                 </div>
               </label>
