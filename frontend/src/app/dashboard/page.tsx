@@ -254,18 +254,18 @@ export default function DashboardPage() {
   return (
     <div className="app-shell min-h-screen">
       <div className="mx-auto flex min-h-screen w-full max-w-[1180px] gap-2 px-3 lg:px-5">
-        <aside className="panel flex w-full max-w-[172px] flex-col px-2 pt-5">
-          <div className="display-font px-3 text-[26px] font-black tracking-[-0.14em] text-[#131717]">OR</div>
+        <aside className="panel flex w-full max-w-[220px] flex-col px-4 pt-5">
+          <div className="display-font text-[26px] font-black tracking-[-0.14em] text-[#131717]">OR</div>
 
-          <div className="mt-5 rounded-[1.5rem] border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] p-4">
-            <p className="text-xs uppercase tracking-[0.28em] text-[var(--muted)]">Signed in</p>
-            <div className="mt-3 flex items-center gap-3">
+          <div className="mt-12">
+            <p className="text-[12px] uppercase tracking-[0.28em] text-[#9ca49f]">Signed in</p>
+            <div className="mt-5 flex items-center gap-4">
               <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#e8b995] text-[10px] font-semibold text-white">
                 {user?.picture ? <img alt={user.name ?? user.email} src={user.picture} className="h-full w-full object-cover" /> : user?.name?.slice(0, 2).toUpperCase() ?? 'OR'}
               </div>
               <div className="min-w-0">
-                <p className="font-medium text-white">{user?.name ?? 'Demo User'}</p>
-                <p className="text-xs text-[var(--muted)]">{user?.email ?? 'demo@reachinbox.ai'}</p>
+                <p className="font-medium text-[#172019]">{user?.name ?? 'Demo User'}</p>
+                <p className="truncate text-[12px] text-[#9ca49f]">{user?.email ?? 'demo@reachinbox.ai'}</p>
               </div>
             </div>
           </div>
@@ -273,12 +273,12 @@ export default function DashboardPage() {
           <button
             type="button"
             onClick={() => setComposeOpen(true)}
-            className="mt-4 h-8 rounded-full border-2 border-[#00a941] px-4 text-[11px] font-medium text-[#00a941] transition hover:bg-[#effaf3]"
+            className="mt-9 h-10 w-full rounded-full border-2 border-[#00a941] px-4 text-[12px] font-medium text-[#00a941] transition hover:bg-[#effaf3]"
           >
             Compose New Email
           </button>
 
-          <nav className="mt-6 flex flex-1 flex-col gap-1">
+          <nav className="mt-7 flex flex-1 flex-col gap-1">
             {([
               ['scheduled', 'Scheduled Emails'],
               ['sent', 'Sent Emails'],
