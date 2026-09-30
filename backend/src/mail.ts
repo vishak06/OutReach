@@ -8,17 +8,15 @@ export interface SentMessage {
 let transporterPromise: Promise<nodemailer.Transporter> | null = null;
 
 async function createTransporter(): Promise<nodemailer.Transporter> {
-  const smtpUser = process.env.SMTP_USER ?? process.env.ETHEREAL_USER;
-  const smtpPass = process.env.SMTP_PASS ?? process.env.ETHEREAL_PASS;
-
-  if (process.env.SMTP_HOST && smtpUser && smtpPass) {
+  if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
     return nodemailer.createTransport({
       host: process.env.SMTP_HOST,
       port: Number(process.env.SMTP_PORT ?? 587),
       secure: process.env.SMTP_SECURE === 'true',
+      requireTLS: process.env.SMTP_SECURE !== 'true',
       auth: {
-        user: smtpUser,
-        pass: smtpPass,
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
       },
     });
   }
@@ -29,6 +27,7 @@ async function createTransporter(): Promise<nodemailer.Transporter> {
     host: account.smtp.host,
     port: account.smtp.port,
     secure: account.smtp.secure,
+    requireTLS: !account.smtp.secure,
     auth: {
       user: account.user,
       pass: account.pass,
