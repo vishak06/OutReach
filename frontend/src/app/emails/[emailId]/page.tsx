@@ -142,21 +142,8 @@ export default function EmailDetailPage() {
               ) : null}
             </div>
 
-            <div className="prose prose-invert mt-6 max-w-none text-[var(--foreground)] prose-p:text-[var(--foreground)] prose-a:text-[var(--accent)]">
-              <div className="whitespace-pre-wrap bg-[#f7f9f8] p-5 text-[12px] leading-7 text-[#25312a]">
-                {email.body}
-              </div>
-            </div>
-
-            <div className="mt-6 grid gap-4 sm:grid-cols-2">
-              <div className="bg-[#f7f9f8] p-4">
-                <p className="text-[11px] text-[#a0a8a3]">Queue job</p>
-                <p className="mt-1 text-[11px] font-medium text-[#25312a]">{email.queueJobId ?? 'Completed'}</p>
-              </div>
-              <div className="bg-[#f7f9f8] p-4">
-                <p className="text-[11px] text-[#a0a8a3]">Error</p>
-                <p className="mt-1 text-[11px] font-medium text-[#25312a]">{email.errorMessage ?? 'None'}</p>
-              </div>
+            <div className="mt-6 bg-[#f7f9f8] p-5 text-[12px] leading-7 text-[#25312a] [&_a]:text-[#00a941] [&_p]:my-3">
+              <div dangerouslySetInnerHTML={{ __html: email.body }} />
             </div>
           </div>
         </div>
