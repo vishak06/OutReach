@@ -5,6 +5,34 @@ export interface SentMessage {
   previewUrl: string | false | null;
 }
 
+async function sendWithResend(params: { from: string; to: string; subject: string; body: string }): Promise<SentMessage> {
+  const response = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      from: process.env.RESEND_FROM ?? params.from,
+      to: [params.to],
+      subject: params.subject,
+      html: params.body,
+    }),
+  });
+
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(`Resend request failed (${response.status}): ${error}`);
+  }
+
+  const result = await response.json() as { id: string };
+
+  return {
+    messageId: result.id,
+    previewUrl: null,
+  };
+}
+
 let transporterPromise: Promise<nodemailer.Transporter> | null = null;
 
 async function createTransporter(): Promise<nodemailer.Transporter> {
@@ -47,6 +75,10 @@ async function getTransporter(): Promise<nodemailer.Transporter> {
 }
 
 export async function sendEmail(params: { from: string; to: string; subject: string; body: string }): Promise<SentMessage> {
+  if (process.env.RESEND_API_KEY) {
+    return sendWithResend(params);
+  }
+
   const transporter = await getTransporter();
   const result = await transporter.sendMail({
     from: params.from,
