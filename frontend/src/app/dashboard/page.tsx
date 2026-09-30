@@ -510,7 +510,7 @@ export default function DashboardPage() {
                   <div id="email-editor" ref={editorRef} contentEditable suppressContentEditableWarning onInput={(event) => { const body = event.currentTarget.innerHTML; setForm((current) => ({ ...current, body })); }} className="min-h-[260px] bg-[#f8faf9] px-3 py-3 text-[12px] leading-6 outline-none" />
                 </div>
               </label>
-              <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-[11px] text-[#25312a]">
+              <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2 text-[11px] text-[#25312a]">
                 <span>Delay between 2 emails</span>
                 <input type="number" min="0" value={form.delaySeconds} onChange={(event) => setForm((current) => ({ ...current, delaySeconds: event.target.value }))} className="quiet-input h-8 w-[62px] rounded-[6px] px-3 text-[11px]" />
                 <span className="ml-1">Hourly Limit</span>
