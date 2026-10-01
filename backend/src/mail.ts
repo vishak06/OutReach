@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import { config } from './config';
 
 export interface SentMessage {
   messageId: string;
@@ -47,6 +48,33 @@ async function getTransporter(): Promise<nodemailer.Transporter> {
 }
 
 export async function sendEmail(params: { from: string; to: string; subject: string; body: string }): Promise<SentMessage> {
+  if (config.resendApiKey) {
+    const response = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${config.resendApiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        from: config.resendFrom ?? params.from,
+        to: [params.to],
+        subject: params.subject,
+        html: params.body,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Resend API returned ${response.status}: ${await response.text()}`);
+    }
+
+    const result = await response.json() as { id?: string };
+
+    return {
+      messageId: result.id ?? `resend-${Date.now()}`,
+      previewUrl: null,
+    };
+  }
+
   const transporter = await getTransporter();
   const result = await transporter.sendMail({
     from: params.from,

@@ -28,6 +28,8 @@ export const config = {
   minSendDelayMs: toNumber(process.env.MIN_SEND_DELAY_MS, 2000),
   hourlyLimit: toNumber(process.env.MAX_EMAILS_PER_HOUR, 200),
   slackWebhookUrl: process.env.SLACK_WEBHOOK_URL,
+  resendApiKey: process.env.RESEND_API_KEY,
+  resendFrom: process.env.RESEND_FROM,
   googleClientId: process.env.GOOGLE_CLIENT_ID,
   googleClientSecret: process.env.GOOGLE_CLIENT_SECRET,
   googleCallbackUrl: process.env.GOOGLE_CALLBACK_URL ?? `${process.env.FRONTEND_URL ?? 'http://localhost:3000'}/api/auth/google/callback`,
