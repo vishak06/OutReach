@@ -283,6 +283,15 @@ RESEND_FROM=onboarding@resend.dev
 
 When `RESEND_API_KEY` is set, it takes priority over Ethereal SMTP. Use a verified sender/domain in Resend for production delivery.
 
+For sending to other recipients without owning a domain, use Brevo's HTTPS API with a verified sender email:
+
+```env
+BREVO_API_KEY=xkeysib-...
+BREVO_FROM=your-verified-email@gmail.com
+```
+
+Create a free Brevo account, verify the sender email under Senders, create an API key, and add these values to Render. When both providers are configured, Brevo takes priority over Resend and SMTP.
+
 ### Optional Google OAuth
 
 ```env

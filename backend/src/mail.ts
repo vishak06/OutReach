@@ -48,6 +48,34 @@ async function getTransporter(): Promise<nodemailer.Transporter> {
 }
 
 export async function sendEmail(params: { from: string; to: string; subject: string; body: string }): Promise<SentMessage> {
+  if (config.brevoApiKey && config.brevoFrom) {
+    const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST',
+      headers: {
+        accept: 'application/json',
+        'api-key': config.brevoApiKey,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        sender: { email: config.brevoFrom },
+        to: [{ email: params.to }],
+        subject: params.subject,
+        htmlContent: params.body,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Brevo API returned ${response.status}: ${await response.text()}`);
+    }
+
+    const result = await response.json() as { messageId?: string };
+
+    return {
+      messageId: result.messageId ?? `brevo-${Date.now()}`,
+      previewUrl: null,
+    };
+  }
+
   if (config.resendApiKey) {
     const response = await fetch('https://api.resend.com/emails', {
       method: 'POST',
